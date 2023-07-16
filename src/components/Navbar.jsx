@@ -38,7 +38,7 @@ const Navbar = () => {
         "getOwnerAddress"
     )
 
-    console.log(data)
+    // console.log(data)
 
   const handleconnectwallet = async() => {
     await connect(metamaskConfig)
@@ -53,10 +53,31 @@ const Navbar = () => {
     
   }
 
+  console.log(user)
     
   return (
     <div className='flex justify-between items-center w-full bg-bg-primary h-[12vh] px-3'>
-        <p className='text-lg font-Poppins text-white'>MedSecure</p>
+      <div className="flex justify-center items-center gap-2">
+        <p className='text-lg font-Poppins text-white cursor-pointer'
+        onClick={() => navigate('/')}
+        >MedSecure</p>
+        {
+          user === 'patient' && <p className='text-lg font-Poppins text-white cursor-pointer' onClick={() => navigate('/patient')}>Doctors</p>
+        }
+        {
+
+          user === 'admin'&& (
+            <div className="flex justify-center items-center px-2 gap-2">
+                <p className='text-lg font-Poppins text-white cursor-pointer'>Doctors</p>
+                <p className='text-lg font-Poppins text-white cursor-pointer'>Patients</p>
+            </div>
+          )
+        }
+      </div>
+
+        {
+            user && <p className="text-white font-serif font-semibold">Welcome {user}</p>
+        }
         <div>
             {
                 st === 'connected' ? (
