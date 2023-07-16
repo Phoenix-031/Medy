@@ -14,10 +14,11 @@ const metamaskConfig = metamaskWallet()
 
 const Navbar = () => {
 
-  const {contractaddress,user,setUser} = useStore((state) => ({
+  const {contractaddress,user,setUser,doctorwallet} = useStore((state) => ({
     contractaddress:state.contractaddress,
     user:state.user,
     setUser:state.setUser,
+    doctorwallet:state.doctorwallet,
     }))
 
     const navigate = useNavigate()
@@ -39,6 +40,7 @@ const Navbar = () => {
         contract,
         "getOwnerAddress"
     )
+      console.log(doctorwallet.includes(address))
 
     // console.log(data)
 
@@ -48,7 +50,7 @@ const Navbar = () => {
     if(address === data){
         setUser('admin')
         navigate('/admin')
-    }    else{
+    } else{
         setUser('patient')
         navigate('/patient')
     }
