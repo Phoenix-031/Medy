@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useConnect, metamaskWallet, useAddress,useContract,useContractRead,useDisconnect } from "@thirdweb-dev/react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FeatherIcon from 'feather-icons-react';
 
 import { useConnectionStatus } from "@thirdweb-dev/react"
@@ -29,12 +29,10 @@ const Navbar = () => {
   const st = useConnectionStatus()
   const disconnect = useDisconnect()
 
-//   if(st === 'connected')console.log('connected')
-  
-  
+
   const connect = useConnect()
   const address = useAddress()
-console.log(address)
+
   const {contract} = useContract(
     contractaddress,contractAbi.abi
     )
@@ -43,33 +41,32 @@ console.log(address)
         contract,
         "getOwnerAddress"
     )
-      // console.log(doctorwallet.includes(address))
 
-    // console.log(data)
+    useEffect(() => {
+      if(adminwallet.includes(address)){
+        setUser('admin')
+        navigate('/admin')
+      }
+      else if(doctorwallet.includes(address)){
+        setUser('doctor')
+        navigate('/doctor')
+      }
+      else if(address){
+        setUser('patient')
+        navigate('/patient')
+      }
+    },[address])
+
 
   const handleconnectwallet = async() => {
      await connect(metamaskConfig)
-     setUser('patient')
-    // console.log(wal)
+    //  setUser('patient')
+
+    // console.log(adminwallet[0])
     // console.log(address)
-    // if(address === adminwallet[0])
-    //   console.log('admin')
-    // if(address && adminwallet.includes(address)){
-    //   setUst('admin')
-    //   setUser('admin')
-    //   console.log('admin')
-    //   navigate('/admin')
-    // }else if(address && doctorwallet.includes(address)){
-    //   setUst('doctor')
-    //   setUser('doctor')
-    //   console.log('doctor')
-    //   navigate('/doctor')
-    // }else if(address){
-    //   setUst('patient')
-    //   setUser('patient')
-    //   console.log('patient')
-    //   navigate('/patient')
-    // }
+    // console.log(adminwallet[0] == address)
+
+
     
   }
     
@@ -110,6 +107,7 @@ console.log(address)
               user && <FeatherIcon icon="log-out" color="white" className='cursor-pointer' onClick={() => {
                 setUser(null)
                 disconnect()
+                navigate('/')
               }}/>
 
             }

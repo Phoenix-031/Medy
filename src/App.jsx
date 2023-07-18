@@ -52,20 +52,17 @@ function App() {
     <Navbar />
     <Routes>
       <Route path='/' element={<Landing />} />
-      <Route path='/admin' element={<AdminHome />} />
-      <Route path='/doctor' element={<DoctorHome />} />
-      <Route path='/patient' element={<PatientHome />} />
       <Route path='/doctor/:id' element={<SpecifiedDoctorList />} />
       <Route path= '/uploaddoc' element = {<FileCoinUpload />} />
-      {/* {
-        user == 'patient' && <Route path='/patient' element={<PatientHome />} />
+      {
+        user === 'patient' && <Route path='/patient' element={<PatientHome />} />
       }
       {
-        user == 'doctor' && <Route path='/doctor' element={<DoctorHome />} />
+        user === 'doctor' && <Route path='/doctor' element={<DoctorHome />} />
       }
       {
-        user == 'admin' && <Route path='/admin' element={<AdminHome />} />
-      } */}
+        user === 'admin' && <Route path='/admin' element={<AdminHome />} />
+      }
     </Routes>
     </div>
   )
