@@ -96,7 +96,7 @@ const Navbar = () => {
         <div className="flex justify-center items-center gap-2">
             {
                 st === 'connected' ? (
-                    <p className='border-border-primary border-2 rounded-md py-2 px-3 bg-gradient-to-r from-g-stop-left to-g-stop-right font-bold text-text-primary text-Poppins text-lg tracking-wide'>Connected</p>
+                    null
                 ) : (
                     <button className='border-border-primary border-2 rounded-md py-2 px-3 bg-gradient-to-r from-g-stop-left to-g-stop-right font-bold text-text-primary text-Poppins text-lg tracking-wide'
             onClick={handleconnectwallet}

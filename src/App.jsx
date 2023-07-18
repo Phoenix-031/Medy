@@ -5,14 +5,9 @@ import { useEffect, useState } from "react"
 import { useConnectionStatus } from "@thirdweb-dev/react"
 
 
-import GetAllDoctors from "./components/Contractcom/GetAllDoctors"
-import AddDoctor from "./components/Contractcom/AddDoctor"
 
 import { Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
-import BookDoctor from "./components/Contractcom/BookDoctor"
-import Category from "./components/Contractcom/Category"
-
 import DoctorHome from "./pages/Doctor/DoctorHome"
 
 import useStore from "./store"
