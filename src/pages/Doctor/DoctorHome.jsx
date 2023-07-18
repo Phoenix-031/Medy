@@ -1,8 +1,11 @@
 import React from 'react'
+import DoctorPageTabs from '../../components/DoctorPageTabs'
 
 const DoctorHome = () => {
   return (
-    <div>DoctorHome</div>
+      <div className='flex justify-center items-start bg-bg-primary h-[88vh] w-full'>
+        <DoctorPageTabs />
+      </div>
   )
 }
 

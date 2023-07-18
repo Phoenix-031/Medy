@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useConnect, metamaskWallet, useAddress } from "@thirdweb-dev/react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { useConnectionStatus } from "@thirdweb-dev/react"
 
@@ -20,6 +20,7 @@ import PatientHome from "./pages/Patient/PatientHome"
 import AdminHome from "./pages/Admin/AdminHome"
 import SpecifiedDoctorList from "./pages/Patient/SpecifiedDoctorList"
 import Landing from "./pages/Landing"
+import FileCoinUpload from "./components/FileCoinUpload"
 
 function App() {
 
@@ -36,11 +37,16 @@ function App() {
   // }
 
   const[doctors, getDoctors] = useState(false)
+  const [usr,setUsr] = useState(null)
 
   const {user} =  useStore((state) => ({
     user:state.user,
   }))
 
+  useEffect(() => {
+    setUsr(user)
+  },[user])
+  
   return(
     <div className="h-full w-full">
     <Navbar />
@@ -50,6 +56,7 @@ function App() {
       <Route path='/doctor' element={<DoctorHome />} />
       <Route path='/patient' element={<PatientHome />} />
       <Route path='/doctor/:id' element={<SpecifiedDoctorList />} />
+      <Route path= '/uploaddoc' element = {<FileCoinUpload />} />
       {/* {
         user == 'patient' && <Route path='/patient' element={<PatientHome />} />
       }

@@ -14,11 +14,14 @@ const metamaskConfig = metamaskWallet()
 
 const Navbar = () => {
 
-  const {contractaddress,user,setUser,doctorwallet} = useStore((state) => ({
+  const [usr,setUst] = useState(null)
+
+  const {contractaddress,user,setUser,doctorwallet,adminwallet} = useStore((state) => ({
     contractaddress:state.contractaddress,
     user:state.user,
     setUser:state.setUser,
     doctorwallet:state.doctorwallet,
+    adminwallet:state.adminwallet
     }))
 
     const navigate = useNavigate()
@@ -31,7 +34,7 @@ const Navbar = () => {
   
   const connect = useConnect()
   const address = useAddress()
-
+console.log(address)
   const {contract} = useContract(
     contractaddress,contractAbi.abi
     )
@@ -40,24 +43,35 @@ const Navbar = () => {
         contract,
         "getOwnerAddress"
     )
-      console.log(doctorwallet.includes(address))
+      // console.log(doctorwallet.includes(address))
 
     // console.log(data)
 
   const handleconnectwallet = async() => {
-    await connect(metamaskConfig)
-
-    if(address === data){
-        setUser('admin')
-        navigate('/admin')
-    } else{
-        setUser('patient')
-        navigate('/patient')
-    }
+     await connect(metamaskConfig)
+     setUser('patient')
+    // console.log(wal)
+    // console.log(address)
+    // if(address === adminwallet[0])
+    //   console.log('admin')
+    // if(address && adminwallet.includes(address)){
+    //   setUst('admin')
+    //   setUser('admin')
+    //   console.log('admin')
+    //   navigate('/admin')
+    // }else if(address && doctorwallet.includes(address)){
+    //   setUst('doctor')
+    //   setUser('doctor')
+    //   console.log('doctor')
+    //   navigate('/doctor')
+    // }else if(address){
+    //   setUst('patient')
+    //   setUser('patient')
+    //   console.log('patient')
+    //   navigate('/patient')
+    // }
     
   }
-
-  console.log(user)
     
   return (
     <div className='flex justify-between items-center w-full bg-bg-primary h-[12vh] px-3'>

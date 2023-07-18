@@ -1,12 +1,38 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import React from 'react'
+import { useState } from 'react';
 
 import { useContract,useContractWrite,useAddress } from '@thirdweb-dev/react';
 
 import useStore from '../store'
 
 import contractAbi from '../contracts/abi.json'
+import { utils } from 'ethers';
+import PinataUpload from './PinataUpload';
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  Alert,
+} from '@chakra-ui/react'
+
+import axios from 'axios'
+
+import { useDisclosure } from '@chakra-ui/react'
+import { Flex,Input,Text,Button } from '@chakra-ui/react'
+import { Box, Center, Image, VStack } from '@chakra-ui/react';
+import CopyToClipboard from './CopyToClipboard';
 
 const DoctorCard = (props) => {
+
+    const {isOpen, onOpen, onClose} = useDisclosure()
+
+    const [toggle,setToggle] = useState(false)
 
     const {contractaddress} = useStore((state) => ({
         contractaddress:state.contractaddress,
@@ -16,14 +42,23 @@ const DoctorCard = (props) => {
 
     const data = props.data;
 
-    console.log(data)
+    const convertedInt = parseInt(data.fees._hex,16)
+
+    // console.log(parseInt(data.fees._hex,16))
 
     const image = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80'
 
-    const handlebookapt = async() => {
+    const handlebookapt = () => {
+        onOpen()
         // console.log('book apt')
-        const data = await mutateAsync({args : ['0x02',"fuckyou",address,'askjvnkjfnvdsjfvndsjfvndksjfvn']})
-        console.log(data)
+        // const val = await mutateAsync({
+        //     args : ['0x02',"fuckyou",address,'askjvnkjfnvdsjfvndsjfvndksjfvn'],
+        //     overrides:{
+        //         gasLimit: 1000000,
+        //         value: utils.parseEther(String(convertedInt))
+        //     }
+        // })
+        // console.log(val)
     }
 
     const {contract} = useContract(
@@ -34,6 +69,71 @@ const DoctorCard = (props) => {
         contract,
         "bookDoctor",
     )
+
+    const [file, setFile] = useState(null);
+    const [filePreview, setFilePreview] = useState(null);
+    const [uploading,setUploading] = useState(null)
+    const [ipfshash,setIpfshash] = useState(null)
+    const [formerr,setFormerr] = useState(false)
+    const [success,setSuccess] = useState(false)
+
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Generate a preview of the file
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFilePreview(reader.result);
+    };
+    reader.readAsDataURL(selectedFile);
+  };
+
+  const handledocumentSubmit = async() => {
+    setUploading(!uploading)
+    
+    if(!file)
+      return
+
+    try {
+
+      const formData = new FormData();
+      formData.append('file', file);
+        
+      const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          pinata_api_key: 'cb5eb7bc89a92b0119dd',
+          pinata_secret_api_key: '8d33da9122b4848b9e3738cd7b52c19b311b1842f55b18ac619fb8088203ff59',
+        },
+      });
+
+      setUploading(false)
+
+      if(response?.data?.IpfsHash)
+        setIpfshash(response.data.IpfsHash)
+      else {
+        Alert('np ipfs hash present')
+      }
+    } catch (error) {
+        setFormerr(!formerr)
+    }
+  }
+
+  const handleConfirmApt = async() => {
+        const val = await mutateAsync({
+            args : ['0x02',"fuckyou",address,ipfshash],
+            overrides:{
+                gasLimit: 1000000,
+                value: utils.parseEther(String(convertedInt))
+            }
+        })
+        console.log(val)
+        setFile(null)
+        setSuccess(true)
+        onClose()
+    }
 
     
   return (
@@ -59,8 +159,85 @@ const DoctorCard = (props) => {
         </div>
 
         <div className='w-full justify-center items-center flex '>
-            <button className='text-white bg-bg-primary px-3 rounded-md py-1' onClick={handlebookapt}>Book Apt</button>
+            {
+                success ? (
+                    <p className='font-semibold text-gray-400 px-3 py-1 rounded-md bg-bg-primary'>Apt Booked</p>
+                ) : (
+                    <button className='text-white bg-bg-primary px-3 rounded-md py-1' onClick={handlebookapt}>Book Apt</button>
+                )
+            }
         </div>
+
+      <Modal isOpen={isOpen} onClose={onClose} className='bg-bg-primary'>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Upload Medical Documents</ModalHeader>
+          <ModalBody className='flex'>
+            <Center>
+            <VStack spacing={4} align="center">
+                    <Button as="label" htmlFor="file-upload" cursor="pointer">
+                    Select File
+                    </Button>
+                    <input
+                    id="file-upload"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.gif,.pdf"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                    />
+                {file && (
+                <Box>
+                    <Text>File Preview:</Text>
+                    <Image src={filePreview} maxH="200px" />
+                </Box>
+                )}
+            </VStack>
+            </Center>
+          </ModalBody>
+                
+                <ModalFooter>
+                    <Flex flexDirection='columnn'>
+                    <Center>
+                    {
+                        uploading ? (
+                            <p>Uploading documents...</p>
+                        ) : (
+                            ipfshash ? (
+                                   null
+                                ) : (
+                                    <Button colorScheme='blue' mr={3} onClick={handledocumentSubmit}>
+                                    Submit
+                                    </Button>
+                                )
+                        )
+                    }
+                    </Center>
+                    <Flex flexDirection='column' gap='3'> 
+                    <Center>
+                    {  ipfshash &&
+                        <Flex flexDirection='column' gap='1'>
+                            
+                            <Text fontWeight='semibold' fontFamily='serif' fontSize='lg'>IpfsHash</Text>
+                            <CopyToClipboard text={ipfshash}/>
+                            
+                        </Flex>
+                    }
+                    </Center>
+                    <Center>
+                    {
+                        ipfshash && (
+                    <Button colorScheme='blue' mr={3} onClick={handleConfirmApt}>
+                    Confirm Appointment
+                    </Button>
+                        )
+                    }
+                    </Center>
+                    </Flex>
+                    </Flex>
+                </ModalFooter>
+                
+        </ModalContent>
+      </Modal>  
     </div>
   )
 }
