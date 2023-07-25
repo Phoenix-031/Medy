@@ -5,7 +5,7 @@ import { useContract,useContractRead,useContractWrite } from '@thirdweb-dev/reac
 import useStore from '../../store'
 
 import contractAbi from '../../contracts/abi.json'
-import AllCategories from '../../components/AllCategories'
+// import AllCategories from '../../components/AllCategories'
 import Specialty from '../../components/Specialty'
 
 
@@ -45,7 +45,7 @@ const AdminHome = () => {
     
     const {mutateAsync} = useContractWrite(
         contract,
-        "addCategory"
+        "addCategory",
     )
     
     if(error){
@@ -59,7 +59,8 @@ const AdminHome = () => {
     
   const handleSubmit = async() => {
     // Handle form submission here
-    const data = await mutateAsync([name]);
+    console.log(name);
+    const data = await mutateAsync({args : [name]});
     console.log(data);
     onClose();
   };
@@ -96,7 +97,11 @@ const AdminHome = () => {
             </div>
         </div>
 
-      <Modal isOpen={isOpen} onClose={onClose} className='bg-bg-primary'>
+      <Modal isOpen={isOpen} onClose={() => {
+        setName('')
+        setDesc('')
+        onClose()
+      }} className='bg-bg-primary'>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add Doctor Speciality</ModalHeader>

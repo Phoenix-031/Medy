@@ -8,6 +8,8 @@ import contractAbi from '../contracts/abi.json'
 
 import useStore from "../store"
 
+import {ethers} from 'ethers'
+
 import { useNavigate } from "react-router-dom"
 
 const metamaskConfig = metamaskWallet()
@@ -33,6 +35,8 @@ const Navbar = () => {
   const connect = useConnect()
   const address = useAddress()
 
+  // console.log(address)
+
   const {contract} = useContract(
     contractaddress,contractAbi.abi
     )
@@ -43,7 +47,10 @@ const Navbar = () => {
     )
 
     useEffect(() => {
+      console.log(adminwallet.includes(address))
+      
       if(adminwallet.includes(address)){
+        console.log('admin')
         setUser('admin')
         navigate('/admin')
       }
@@ -83,15 +90,15 @@ const Navbar = () => {
 
           user === 'admin'&& (
             <div className="flex justify-center items-center px-2 gap-2">
-                <p className='text-lg font-Poppins text-white cursor-pointer'>Doctors</p>
-                <p className='text-lg font-Poppins text-white cursor-pointer'>Patients</p>
+                <button onClick={() => {navigate('/admin/doctors')}} className='text-lg font-buttonoppins text-white cursor-pointer'>Doctors</button>
+                <button onClick={() => {navigate('/admin/patients')}} className='text-lg font-Poppins text-white cursor-pointer'>Patients</button>
             </div>
           )
         }
       </div>
 
         {
-            user && <p className="text-white font-serif font-semibold">Welcome {user}</p>
+            user && <p className="text-white font-serif font-semibold">{user}</p>
         }
         <div className="flex justify-center items-center gap-2">
             {
@@ -104,7 +111,7 @@ const Navbar = () => {
             }
             {
                          
-              user && <FeatherIcon icon="log-out" color="white" className='cursor-pointer' onClick={() => {
+              user && <FeatherIcon icon="log-out" color="white" className='cursor-pointer' onClick={async() => {
                 setUser(null)
                 disconnect()
                 navigate('/')

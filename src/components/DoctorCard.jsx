@@ -70,6 +70,11 @@ const DoctorCard = (props) => {
         "bookDoctor",
     )
 
+    // if(error && !isLoading) { 
+    //   onClose()
+    //   Alert('Appointment was not booked due to lack of eth')
+    // }
+
     const [file, setFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const [uploading,setUploading] = useState(null)
@@ -129,10 +134,9 @@ const DoctorCard = (props) => {
                 value: utils.parseEther(String(convertedInt))
             }
         })
-        console.log(val)
         setFile(null)
         setSuccess(true)
-        onClose()
+        onClose() 
     }
 
     
@@ -168,7 +172,11 @@ const DoctorCard = (props) => {
             }
         </div>
 
-      <Modal isOpen={isOpen} onClose={onClose} className='bg-bg-primary'>
+      <Modal isOpen={isOpen} onClose={() => {
+        setFile(null)
+        setIpfshash(null)
+        onClose()
+      }} className='bg-bg-primary'>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Upload Medical Documents</ModalHeader>

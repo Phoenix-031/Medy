@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.9;
 
 contract MedicalHealthContract {
     struct Doctor {
@@ -80,8 +80,7 @@ contract MedicalHealthContract {
         string memory registrationNo,
         uint256 registrationYear,
         string memory degreeName,
-        string memory medicalCouncilName
-    ) external onlyOwner {
+        string memory medicalCouncilName) external onlyOwner {
         require(doctorFees > 0, "Fee should be greater than 0.");
         require(bytes(doctorName).length > 0, "Doctor name should not be empty.");
 
@@ -166,8 +165,7 @@ contract MedicalHealthContract {
         string memory,
         uint256,
         string memory,
-        string memory
-    ) {
+        string memory) {
         Doctor storage selectedDoctor = listDoctors[doctorId];
         require(bytes(selectedDoctor.name).length > 0, "Doctor not found.");
 
@@ -193,7 +191,7 @@ contract MedicalHealthContract {
         Doctor storage selectedDoctor = listDoctors[doctorId];
         require(bytes(selectedDoctor.name).length > 0, "Doctor not found.");
 
-        require(msg.value == selectedDoctor.fees, "Insufficient payment.");
+        require(msg.value >= selectedDoctor.fees, "Insufficient payment.");
 
         uint256 patientId = ++index;
 
@@ -261,6 +259,32 @@ contract MedicalHealthContract {
         emit MedicalReportSent(patientId, medicalReportHash);
     }
 
+    function getPatientsUnderDoctor(address doctorWallet) external view returns (uint256[] memory patientIds, address[] memory patientWallets) {
+     uint256 count = 0;
+     for (uint256 i = 1; i <= index; i++) {
+        Patient storage currentPatient = patients[i];
+        if (listDoctors[currentPatient.doctorUniqueId].wallet == doctorWallet) {
+            count++;
+        }
+      }
+
+     uint256[] memory ids = new uint256[](count);
+     address[] memory wallets = new address[](count);
+
+     uint256 j = 0;
+     for (uint256 i = 1; i <= index; i++) {
+        Patient storage currentPatient = patients[i];
+        if (listDoctors[currentPatient.doctorUniqueId].wallet == doctorWallet) {
+            ids[j] = currentPatient.uniqueId;
+            wallets[j] = currentPatient.wallet;
+            j++;
+        }
+     }
+
+     return (ids, wallets);
+    }
+
+
     function giveDoctorReview(uint256 doctorId, uint256 patientId, uint256 rating, string memory comments) external {
         Doctor storage selectedDoctor = listDoctors[doctorId];
         require(bytes(selectedDoctor.name).length > 0, "Doctor not found.");
@@ -296,8 +320,7 @@ contract MedicalHealthContract {
             string memory doctorCategory,
             address doctorWallet,
             string memory doctorRegistrationNo
-        )
-    {
+        ) {
         require(bytes(patients[patientId].name).length > 0, "Patient not found.");
         require(patients[patientId].wallet == patientWallet, "Invalid patient wallet address.");
 

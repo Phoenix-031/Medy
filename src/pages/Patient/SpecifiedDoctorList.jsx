@@ -1,4 +1,3 @@
-import React from 'react'
 
 import { useContract,useContractRead } from '@thirdweb-dev/react'
 
