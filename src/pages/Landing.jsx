@@ -9,7 +9,7 @@ import Hero from '../assets/landing/hero.jpg';
 
 const Landing = () => {
   return (
-    <div className="h-[88vh] w-screen relative snap-mandatory snap-y scroll-smooth overflow-scroll">
+    <div className="h-[88vh] w-full relative snap-mandatory snap-y scroll-smooth overflow-scroll">
       {/* <div className="absolute top-0 left-0 right-0 h-20 z-10 ">navigation</div> */}
       <section
         className="bg-gradient-to-tl from-[#CEEFFF] from-10% via-[#EAF8FF] to-[#EFFAFD] w-full h-screen snap-center shrink-0 flex items-center justify-center relative"

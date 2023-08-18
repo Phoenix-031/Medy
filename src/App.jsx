@@ -18,20 +18,9 @@ import Landing from "./pages/Landing"
 import FileCoinUpload from "./components/FileCoinUpload"
 import DoctorList from "./pages/Admin/DoctorList"
 import PatientList from "./pages/Admin/PatientList"
+import Admin from "./pages/Admin/Admin"
 
 function App() {
-
-  // const st = useConnectionStatus()
-
-  // if(st === 'connected')console.log('connected')
-  
-  
-  // const connect = useConnect()
-  // const address = useAddress()
-
-  // const handleconnectwallet = async() => {
-  //   await connect(metamaskConfig)
-  // }
 
   const[doctors, getDoctors] = useState(false)
   const [usr,setUsr] = useState(null)
@@ -60,7 +49,8 @@ function App() {
         user === 'doctor' && <Route path='/doctor' element={<DoctorHome />} />
       }
       {
-        user === 'admin' && <Route path='/admin' element={<AdminHome />} />
+        // user === 'admin' && <Route path='/admin' element={<AdminHome />} />
+        user === 'admin' && <Route path='/admin' element={<Admin />} />
       }
     </Routes>
     </div>

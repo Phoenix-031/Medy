@@ -76,7 +76,7 @@ const AdminHome = () => {
                 {
                     isLoading ? (
                         <div>
-                            <p className="font-serif text-lg text-green-500 text-center">Loading...</p>
+                           <p className="font-serif text-lg text-green-500 text-center">Loading...</p>
                         </div>
                     ) : (
                         <div className="py-2 flex justify-start items-baseline overflow-y-hidden gap-1 px-2">

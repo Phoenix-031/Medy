@@ -104,20 +104,39 @@ const DoctorCard = (props) => {
     try {
 
       const formData = new FormData();
-      formData.append('file', file);
+      // formData.append('file', file);
         
-      const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          pinata_api_key: 'cb5eb7bc89a92b0119dd',
-          pinata_secret_api_key: '8d33da9122b4848b9e3738cd7b52c19b311b1842f55b18ac619fb8088203ff59',
-        },
-      });
+      // const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //     pinata_api_key: 'cb5eb7bc89a92b0119dd',
+      //     pinata_secret_api_key: '8d33da9122b4848b9e3738cd7b52c19b311b1842f55b18ac619fb8088203ff59',
+      //   },
+      // });
+
+      // console.log(file)
+
+      //verbwire ipfs storage
+      formData.append('filePath', file);
+
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'X-API-Key': 'sk_live_69738b99-3235-4fc8-8d3a-0bf18a31495a'
+      }
+    };
+      options.body = formData;
+      const response = await fetch('https://api.verbwire.com/v1/nft/store/file',options)
+      const response_verbwire_json = await response.json()
+      console.log(response_verbwire_json.ipfs_storage.ipfs_url.split('/')[4])
 
       setUploading(false)
 
-      if(response?.data?.IpfsHash)
-        setIpfshash(response.data.IpfsHash)
+      // if(response?.data?.IpfsHash)
+      if(response_verbwire_json.ipfs_storage.ipfs_url.split('/')[4])
+        // setIpfshash(response.data.IpfsHash)
+        setIpfshash(response_verbwire_json.ipfs_storage.ipfs_url.split('/')[4])
       else {
         Alert('np ipfs hash present')
       }

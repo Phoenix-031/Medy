@@ -2,7 +2,20 @@
 export default {
   content: ['./index.html','./src/**/*.{,js,ts,jsx,tsx}'],
   theme: {
-    extend: {
+    fontFamily:{
+      'Poppins' : 'Poppins, sans-serif',
+      'Roboto' : 'Roboto, sans-serif',
+      'Montserrat' : 'Montserrat, sans-serif',
+      'Urbanist' : 'Urbanist, sans-serif',
+      'RobotoS' : 'Roboto Slab, serif',
+      'Ubuntu' : 'Ubuntu, sans-serif',
+      'Varela' : 'Varela, sans-serif',
+      'EB Garamond' : 'EB Garamond, serif',
+    },
+    extend: { 
+      borderWidth:{
+        '1' : '1.5px',
+      },
       backgroundColor:{
         'bg-primary' : '#060606',
         'bg-secondary' : '#131417',

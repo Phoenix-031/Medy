@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 
 import {
@@ -34,6 +34,15 @@ const DoctorList = () => {
     const [degname,setDegname] = useState('')
     const [medname,setMedname] = useState('')
 
+    // const [all,setAll] = useState('')
+
+    // useEffect(() => {
+    //     const getall = async() => {
+    //         const data = await getAll()
+    //         setAll(data)
+    //     }
+    //     getall()
+    // },[])
 
     const {isOpen, onOpen, onClose} = useDisclosure()
 
@@ -50,13 +59,22 @@ const DoctorList = () => {
         "addDoctor",
     )
 
+    // const getAll = useContractRead(
+    //     contract,
+    //     "getAllDoctors",
+    // )
+
     const handleadddoctor = async() => {
         const data = await mutateAsync({
             args : [name,cat,wallet,fees,regn,regyr,degname,medname],
         })
         console.log(data)
+        window.alert('Doctor Added')
         onClose()
     }
+    
+
+    
     
   return (
     <div className='w-full flex flex-col bg-bg-primary justify-start items-center h-[88vh]'>
